@@ -414,6 +414,24 @@ void qemu_plugin_register_vcpu_tb_exec_inline_per_vcpu(
     uint64_t imm);
 
 /**
+ * qemu_plugin_register_vcpu_insn_exec_after_cb() - register insn execution callback AFTER execution
+ * @insn: the instruction handle from translate callback
+ * @cb: callback function
+ * @flags: does the plugin read or write the CPU's registers?
+ * @userdata: any plugin data to pass to the callback?
+ *
+ * The @cb function is called AFTER an instruction executes.
+ * This allows modification of registers after the instruction has completed.
+ * NOTE: The instruction may still fault, so the callback may not always indicate
+ * successful completion.
+ */
+QEMU_PLUGIN_API
+void qemu_plugin_register_vcpu_insn_exec_after_cb(struct qemu_plugin_insn *insn,
+                                                   qemu_plugin_vcpu_udata_cb_t cb,
+                                                   enum qemu_plugin_cb_flags flags,
+                                                   void *userdata);
+
+/**
  * qemu_plugin_register_vcpu_insn_exec_cb() - register insn execution cb
  * @insn: the opaque qemu_plugin_insn handle for an instruction
  * @cb: callback function

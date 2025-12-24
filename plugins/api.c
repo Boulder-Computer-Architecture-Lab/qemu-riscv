@@ -124,6 +124,16 @@ void qemu_plugin_register_vcpu_tb_exec_inline_per_vcpu(
     }
 }
 
+void qemu_plugin_register_vcpu_insn_exec_after_cb(struct qemu_plugin_insn *insn,
+                                                  qemu_plugin_vcpu_udata_cb_t cb,
+                                                  enum qemu_plugin_cb_flags flags,
+                                                  void *udata)
+{
+    if (!tb_is_mem_only()) {
+        plugin_register_dyn_cb__udata(&insn->insn_cbs_after, cb, flags, udata);
+    }
+}
+
 void qemu_plugin_register_vcpu_insn_exec_cb(struct qemu_plugin_insn *insn,
                                             qemu_plugin_vcpu_udata_cb_t cb,
                                             enum qemu_plugin_cb_flags flags,

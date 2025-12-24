@@ -341,6 +341,13 @@ static void plugin_gen_inject(struct qemu_plugin_tb *plugin_tb)
 
             case PLUGIN_GEN_AFTER_INSN:
                 assert(insn != NULL);
+
+                cbs = insn->insn_cbs_after;
+                for (i = 0, n = (cbs ? cbs->len : 0); i < n; i++) {
+                    inject_cb(
+                        &g_array_index(cbs, struct qemu_plugin_dyn_cb, i));
+                }
+
                 if (insn->mem_helper) {
                     gen_disable_mem_helper();
                 }
@@ -463,6 +470,9 @@ void plugin_gen_insn_start(CPUState *cpu, const DisasContextBase *db)
     insn->mem_helper = false;
     if (insn->insn_cbs) {
         g_array_set_size(insn->insn_cbs, 0);
+    }
+    if (insn->insn_cbs_after) {
+        g_array_set_size(insn->insn_cbs_after, 0);
     }
     if (insn->mem_cbs) {
         g_array_set_size(insn->mem_cbs, 0);

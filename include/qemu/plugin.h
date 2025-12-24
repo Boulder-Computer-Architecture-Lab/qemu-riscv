@@ -114,6 +114,7 @@ struct qemu_plugin_dyn_cb {
 struct qemu_plugin_insn {
     uint64_t vaddr;
     GArray *insn_cbs;
+    GArray *insn_cbs_after;
     GArray *mem_cbs;
     uint8_t len;
     bool calls_helpers;
