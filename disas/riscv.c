@@ -984,6 +984,8 @@ typedef enum {
     rv_op_ssamoswap_d = 953,
     rv_op_c_sspush = 954,
     rv_op_c_sspopchk = 955,
+    rv_op_secon = 956,
+    rv_op_secoff = 957,
 } rv_op;
 
 /* register names */
@@ -2254,6 +2256,8 @@ const rv_opcode_data rvi_opcode_data[] = {
       rv_op_sspush, 0 },
     { "c.sspopchk", rv_codec_cmop_ss, rv_fmt_rs1, NULL, rv_op_sspopchk,
       rv_op_sspopchk, 0 },
+    { "secon", rv_codec_i, rv_fmt_none, NULL, 0, 0, 0, 0 },
+    { "secoff", rv_codec_i, rv_fmt_none, NULL, 0, 0, 0, 0 },
 };
 
 /* CSR names */
@@ -2773,6 +2777,19 @@ static void decode_inst_opcode(rv_decode *dec, rv_isa isa)
         }
         break;
     case 3:
+
+        // Custom secon and secoff instructions.
+        if (inst == 0x0000100b)
+        {
+            op = rv_op_secon;
+            break;
+        }
+        else if (inst == 0x0000000b)
+        {
+            op = rv_op_secoff;
+            break;
+        }
+
         switch ((inst >> 2) & 0b11111) {
         case 0:
             switch ((inst >> 12) & 0b111) {
